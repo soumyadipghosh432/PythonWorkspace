@@ -48,6 +48,19 @@ c = 8
 
 if not(c > 15):
     print("The value is low enough")
+
     
+    
+#Iterator
+
+string = '123'
+
+my_iterator = iter(string)
+
+#prints the location of the first element of the object i.e. the begining of the first char of the string
+print(my_iterator)
+
+# First next() will get the first element from the head location
+print(next(my_iterator))    
     
 
