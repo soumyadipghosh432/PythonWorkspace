@@ -1,0 +1,53 @@
+ipAddress = "111.222.0.1"
+print(ipAddress.count("."))
+
+some_list = ["First Item","Second Item","Third Item"]
+
+some_list.append("New Item")
+some_list.append("New Item2")
+some_list.remove("New Item")
+
+for item in some_list:
+    print(item)
+
+
+evens = [2,4,6,8]
+odds = [1,3,5,7,9]
+
+numbers = evens + odds
+print(numbers) #Concatenated list
+
+#returns object in sorted order
+print(sorted(numbers))
+
+#this will not return a variable. Do the change in the object itself
+numbers.sort()
+
+print(numbers) #Sorted List
+
+#below two lists are same, empty lists
+list_1 = []
+list_2 = list()
+
+list_1=['A','B']
+list_2 = list_1
+print(list_2 is list_1) #returns true
+
+
+list_1=['A','B']
+list_2 = list(list_1)
+print(list_2 is list_1) #returns false
+
+
+#this will break the string into character array
+print(list("This is a list"))
+
+
+list1 = [2,6,4,8]
+list2 = list1
+list2.sort(reverse=True)
+print(list1) #this will print the list as sorted as the list object is same for both variables
+
+
+
+
