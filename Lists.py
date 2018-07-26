@@ -92,3 +92,11 @@ for meal in menu:
         for items in meal:
             print(items)
 
+
+
+###################################
+#list to string
+myList = ["a", "b", "c", "d"]
+newString = ",".join(myList) #this will convert the list into comma seperated string
+print(myList)
+
