@@ -79,4 +79,31 @@ print(val5)
 part1, part2 = val5
 print(part1)
 
+#sample case study
+collection = (
+    (
+        "Romantic Souls", "T-Series", (
+            (1, "Track one"),
+            (2, "Track two")
+        ),
+        2001
+    ),
+    (
+        "Indian Pops", "Tips", (
+            (1, "Track one"),
+            (2, "Track two"),
+            (3, "Track three"),
+        ),
+        2002
+    )
+)
+
+for album in collection:
+    name, company, tracks, year = album
+    print("Name : {}".format(name))
+    print("Company : {}".format(company))
+    print("Published on : {}".format(year))
+    for track in tracks:
+        tracknum, tracktitle = track
+        print("\t {}# : {}".format(tracknum,tracktitle))
 
