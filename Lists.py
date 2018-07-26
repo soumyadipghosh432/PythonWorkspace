@@ -100,3 +100,11 @@ myList = ["a", "b", "c", "d"]
 newString = ",".join(myList) #this will convert the list into comma seperated string
 print(myList)
 
+
+####################################
+# Split a text into list of values
+str = "This is a text"
+print(str.split()) #this will be comma seperated - ['This', 'is', 'a', 'text']
+print(str.split(",")) #this will be space seperated like original string but as a record in list - ['This is a text']
+print(str)
+
