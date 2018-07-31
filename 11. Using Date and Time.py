@@ -128,3 +128,111 @@ import datetime
 print(datetime.datetime.today())
 print(datetime.datetime.now())
 print(datetime.datetime.utcnow())
+
+
+############################################### USING PYTZ ################################################
+# 1. Install and Configure pip. In windows : Reinstall python, Linux : sudo apt-get install python3-pip
+# 2. Install pytz. In Windows from CMD or from Linux from Terminal : pip3 install pytz
+
+import pytz
+import datetime
+
+country = "GB"
+city = "Europe/Moscow"
+city = "Europe/Paris"
+city = "Asia/Calcutta"
+
+tz_local = pytz.timezone(country)
+tz_local = pytz.timezone(city)
+
+local_time = datetime.datetime.now(tz=tz_local)
+print("Local Time in {} is {}".format(city, local_time))
+
+print("==============")
+# List all available timezones in pytz
+for x in pytz.all_timezones:
+    print(x)
+
+print("==============")
+# List all available country with country codes
+for x in sorted(pytz.country_names):
+    print(x, " : " , pytz.country_names[x])
+
+print("==============")
+# List of country names with codes and timezones
+for x in sorted(pytz.country_names):
+    print(x, " : ", pytz.country_names[x], " : ",pytz.country_timezones.get(x))
+
+
+# Get the current localtime for all timezones
+for x in sorted(pytz.country_names):
+    print(x, " : ", pytz.country_names[x])
+    if x in pytz.country_timezones:
+        for zone in sorted(pytz.country_timezones[x]):
+            local_tz = pytz.timezone(zone)
+            local_time = datetime.datetime.now(tz=local_tz)
+            print("\tTime at {} is : \t\t\t {}".format(local_tz, local_time))
+    else:
+        print("\ttNo Timezone available for this country")
+
+
+print("=" * 40)
+
+############## NAIVE AND AWARE DATETIME ##################
+import datetime
+import pytz
+
+naive_local_time = datetime.datetime.now()
+naive_utc_time = datetime.datetime.utcnow()
+
+print("Naive Local Time : ", naive_local_time)
+print("Naive UTC Time   : ", naive_utc_time)
+
+
+aware_local_time = pytz.utc.localize(naive_local_time)
+aware_utc_time = pytz.utc.localize(naive_utc_time)
+
+# Both is converted to UTC and timezone will be UTC. Offset will be 0 for both times
+print("Aware Local Time : {} at Timezone : {}".format(aware_local_time, aware_local_time.tzinfo))
+print("Aware UTC Time   : {} at Timezone : {}".format(aware_utc_time, aware_utc_time.tzinfo))
+
+tz = pytz.timezone("GB")
+aware_local_time = pytz.utc.localize(naive_utc_time).astimezone() # Convert to current system timezone
+aware_local_time = pytz.utc.localize(naive_utc_time).astimezone(tz) # Convert to timezone passed as parameter
+print("Aware Local Time : {} at Timezone : {}".format(aware_local_time, aware_local_time.tzinfo))
+
+
+# Declaraing a time by choice and generating datetime from seconds
+# datetime.datetime(year, month, date, hour, minute, second, millisecond)
+gap_time = datetime.datetime(1990, 10, 23, 11, 40, 0, 0)
+print(gap_time)
+print(gap_time.timestamp()) # Number of seconds from epoch till current time in systems timezone
+
+print(datetime.datetime.fromtimestamp(gap_time.timestamp())) # Converts to local datetime without the UTC Offset
+print(datetime.datetime.utcfromtimestamp(gap_time.timestamp())) # Converts to UTC datetime without the UTC Offset
+print(pytz.utc.localize(datetime.datetime.utcfromtimestamp(gap_time.timestamp()))) # Converts with UTC Offset
+print(pytz.utc.localize(datetime.datetime.utcfromtimestamp(gap_time.timestamp())).astimezone(tz)) # Converts with UTC Offset and timezone as parameter
+print(pytz.utc.localize(datetime.datetime.utcfromtimestamp(gap_time.timestamp())).astimezone()) # Converts with UTC Offset and timezone as local system
+
+########## PYTZ Program ###########
+
+available_zones = {"1":"Asia/Kolkata", "2":"Europe/London", "3":"Japan", "4":"Zulu"}
+print("Enter a choice for Timezone (0 to quit)")
+for place in sorted(available_zones):
+    print("\t\t{} : {}".format(place, available_zones[place]))
+
+
+while True:
+    choice = input()
+    if choice == '0':
+        break
+    if choice in available_zones.keys():
+        tz_display = pytz.timezone(available_zones.get(choice))
+        world_time = datetime.datetime.now(tz=tz_display)
+        print("The time in {} is : {} , Timezone : {}".format(available_zones.get(choice), world_time.strftime('%A %x %X %z'), world_time.tzname()))
+        print("Local time is : {}".format(datetime.datetime.now().strftime('%A %x %X')))
+        print("UTC time is : {}".format(datetime.datetime.utcnow().strftime('%A %x %X')))
+        print()
+
+
+
