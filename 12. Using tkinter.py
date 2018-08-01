@@ -79,3 +79,49 @@ button2.pack(side="top")
 button3.pack(side="top")
 
 mainWindow.mainloop()
+
+########################### Using Tkinter GRID Geometry ###############################
+
+try:
+    import tkinter
+except ImportError: #For python2
+    import Tkinter as tinter
+
+mainWindow = tkinter.Tk()
+mainWindow.title("My Application")
+mainWindow.geometry("640x480")
+
+label = tkinter.Label(mainWindow, text="This is some text in label")
+label.grid(row=0, column=0)
+
+leftFrame = tkinter.Frame(mainWindow)
+leftFrame.grid(row=1, column=1, sticky="ns") # anchoring the element to north and expand to south relative to parent
+
+rightFrame = tkinter.Frame(mainWindow)
+rightFrame.grid(row=1, column=2, sticky="new") # anchoring the element to north and expand in east-west relative to parent
+
+
+canvas = tkinter.Canvas(leftFrame, relief="raised", borderwidth=1)
+canvas.grid(row=1, column=0)
+
+
+button1 = tkinter.Button(rightFrame, text = "Button 1")
+button2 = tkinter.Button(rightFrame, text = "Button 2")
+button3 = tkinter.Button(rightFrame, text = "Button 3")
+
+button1.grid(row=0, column=0, sticky="ew") 
+button2.grid(row=1, column=0, sticky="ew")
+button3.grid(row=2, column=0, sticky="ew")
+
+# Configure the columns to add space to the elements. STICKY will work only if the weight is assigned to parent
+mainWindow.columnconfigure(0, weight=1)
+mainWindow.columnconfigure(1, weight=1)
+mainWindow.columnconfigure(2, weight=1)
+rightFrame.columnconfigure(0, weight=1) # If this weight is not assigned, the sticky for child buttons will not work
+
+leftFrame.config(relief='sunken', borderwidth=1)
+rightFrame.config(relief='sunken', borderwidth=1)
+
+
+mainWindow.mainloop()
+
