@@ -50,3 +50,56 @@ def custom_print_ret(*texts):
 
 print(custom_print_ret(" ---> Some text <---"))
 print(custom_print_ret(" ---> Some text1 <---"," ---> Some text2 <---"))
+
+
+################## LOCAL and GLOBAL VARIABLES #######################
+# Local variables to function
+def someFunction(text):
+    val1 = 10
+    list1 = list(range(10))
+    print(list1)
+    print(locals()) # Get the variables those are defined / used in this function scope
+
+someFunction("someValue")    
+
+### Global and Local Variable with same name
+x = 5 # this is global variable
+
+def foo():
+    x = 10
+    print("local x:", x) # 10
+
+foo()
+print("global x:", x) # 5
+
+
+### Nonlocal Variables
+# Nonlocal variable are used in nested function whose local scope is not defined.
+# This means, the variable can be neither in the local nor the global scope.
+def outer():
+    s = "local"
+    print("inner before nonlocal:", s) #Local
+    
+    def inner():
+        nonlocal s # If this is commented, then outer variable will not be changed
+        s = "nonlocal"
+        print("inner after nonlocal:", s) # Nonlocal
+    
+    inner()
+    print("outer:", s) # Nonlocal
+
+outer()
+
+
+### Global variable in function scope
+x = 5 # this is global variable
+
+def foo():
+    global x # Using as global variable
+    x = x * 5
+    print("local x:", x) # 25
+
+print("global x before:", x) # 5
+foo()
+print("global x after:", x) # 25
+
