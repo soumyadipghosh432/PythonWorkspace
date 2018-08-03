@@ -35,7 +35,18 @@ def custom_print_param(*texts, x_sep=" ", x_end="\n", x_file=None, x_flush=False
     for arg in texts:
         text += str(arg) + x_sep
     left_margin = 1
-    print(" " * left_margin, text, end=x_end, file=x_file, flush=x_flush, sep=x_sep)
-
+    print(" " * left_margin, text, end=x_end, file=x_file, flush=x_flush)
 
 custom_print_param("--> Hello","--> World",x_sep="|")    
+
+
+# Defining a function to return a string
+def custom_print_ret(*texts):
+    text = ""
+    for arg in texts:
+        text += str(arg) + " "
+    left_margin = 2
+    return " " * left_margin + text
+
+print(custom_print_ret(" ---> Some text <---"))
+print(custom_print_ret(" ---> Some text1 <---"," ---> Some text2 <---"))
