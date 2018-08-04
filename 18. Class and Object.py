@@ -2,6 +2,7 @@ class Laptop(object):
 
 	powerSource = "electricity"
 
+	""" this is the constructor for class """
 	def __init__(self, make, price):
 		self.make = make
 		self.price = price
