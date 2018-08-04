@@ -76,6 +76,7 @@ print("global x:", x) # 5
 ### Nonlocal Variables
 # Nonlocal variable are used in nested function whose local scope is not defined.
 # This means, the variable can be neither in the local nor the global scope.
+# Python will not search for this variable in local scope or gloabl scope. Rather it will look in the enclosed scope of current flow
 def outer():
     s = "local"
     print("inner before nonlocal:", s) #Local
