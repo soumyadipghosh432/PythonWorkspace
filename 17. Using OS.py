@@ -37,6 +37,33 @@ def listing_using_walk(d):
 			print("File : "+ f)
 
 
-
 listing("/home/soumyadip/PythonWorkspace")
 listing_using_walk("/home/soumyadip/PythonWorkspace")
+
+print("=" * 25)
+print("Using OS module for operating system operations")
+print("=" * 25)
+
+cmd = "pwd"
+os.system(cmd)
+
+print(os.getcwd())  # Returns current working directory\
+print(os.environ["LANGUAGE"])  # Returns the env variable specified. Get full from linux using 'env' command in terminal
+print(os.getgid())  # Return the real group id of the current process.
+print(os.getuid())  # Return the current process’s user id
+print(os.getpid())  # Returns the real process ID of the current process
+print(os.uname())   # Return information identifying the current operating system
+
+uname = list(os.uname())
+print(uname[1])  # returns only the nodename
+
+# few other commands with parameters. params need to be defiuned manually
+os.umask(mask)       # Set the current numeric umask and return the previous umask
+os.chroot(path)      # Change the root directory of the current process to path.   
+os.listdir(path)     # Return a list of the entries in the directory given by path.
+os.mkdir(path)       # Create a directory named path with numeric mode mode.
+os.makedirs(path)    # Recursive directory creation function.
+os.remove(path)      # Remove (delete) the file path.
+os.removedirs(path)  # Remove directories recursively.
+os.rename(src, dst)  # Rename the file or directory src to dst.
+os.rmdir(path)       # Remove (delete) the directory path.
