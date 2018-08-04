@@ -2,7 +2,6 @@ class Laptop(object):
 
 	powerSource = "electricity"
 
-	""" this is the constructor for class """
 	def __init__(self, make, price):
 		self.make = make
 		self.price = price
@@ -18,7 +17,14 @@ class Laptop(object):
 		else:
 			print("{} is not having OS pre-installed".format(self.make))
 			
-			
+	@staticmethod
+	def someFunc():
+		print("This is a static method in python")
+		print("Static method in python should be without self parameter")
+		print("Static methos requires @staticmethos annotation before definition")
+
+
+
 dell = Laptop("Dell", "40000")
 lenovo = Laptop("Lenovo", "38000")
 hp = Laptop("HP", "39000")
@@ -75,3 +81,13 @@ print(Laptop.__dict__) # this will show powerSource variable since it was define
 print(dell.__dict__) # this will not show powerSource variable
 print(lenovo.__dict__) # this will not show powerSource variable
 print(hp.__dict__) # this will show show powerSource variable since the value is modified later in program scope
+
+
+""" =========================================================================
+	static methods are same either from class or from object instances 
+	however, calling it from class is bit slower since python looks for 
+	functions / attributes first in object namespace and then in class
+========================================================================= """
+hp.someFunc()
+dell.someFunc()
+Laptop.someFunc()
