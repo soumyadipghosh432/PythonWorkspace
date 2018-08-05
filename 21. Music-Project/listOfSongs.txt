@@ -1,0 +1,10 @@
+Romantic Kishore	1997	Kishore Kumar	Yeh Sham Mastani	300
+Romantic Kishore	1997	Kishore Kumar	Dil Kya Kare	290
+Romantic Kishore	1997	Kishore Kumar	Oh Hansini	310
+Romantic Kishore	1997	Kishore Kumar	Aanewala Pal	240
+Romantic Kishore	1997	Kishore Kumar	Neel Neele Ambar Par	320
+Soulful Arijit	2018	Arijit Singh	Hum Mar Jayenge	295
+Soulful Arijit	2018	Arijit Singh	Meri Ashiqui	294
+Soulful Arijit	2018	Arijit Singh	Sajde	293
+Remix Bash	2018	Arijit Singh	Some Song Here	256
+Remix Bash	2018	Yo Yo Honey Singh	Some Rap Here	250
