@@ -1,0 +1,90 @@
+https://www.codingforentrepreneurs.com/blog/install-python-django-on-windows/
+https://www.youtube.com/watch?v=3TqO5FfhV28
+
+1. Download from https://www.python.org/downloads/
+Pick version 3.6.X (replace x with the highest number displayed)
+Be sure to check you're downloading the right python version for your system (64bit vs 32bit) Not sure?
+Do a Cortana search for System Information, open it
+look for System Type
+mine says x64-based PC which means mine is 64-bit and I should download the Windows x86-64 executable installer
+2. Open Python Installer (likely in Downloads):
+Tick/Select Add Python 3.6 to PATH
+Select Customize Installation (this is important)
+Tick/Select pip (others, leave as default)
+Hit next
+Tick/Select:
+Install for all users
+Add Python to environment variables
+Create shortcuts for installed applications
+`Precomplie standard libary
+Customize Install Location and use: `C:\Python36
+Hit Install
+3. Verify Python Installed in Powershell
+Search/Open Windows Powershell
+Type python -V and hit enter. Does the following show up?:
+Python 3.6.2
+If typing python -V fails, try:
+
+Restart Computer
+Uninstall python and redo step 2 above.
+Verify pip by entering:
+
+pip freeze
+If you see The term 'pip' is not recognized as the name... then you do the installation correctly. Otherwise, you're good.
+4. Update Powershell Settings:
+You should only have to do this 1 time, if done correctly.
+
+Search Windows Powershell (a search is important)
+Right click, select "Run as Administrator"; cofirm security pop-up if needed
+Enter:
+Set-ExecutionPolicy Unrestricted
+5. Create Dev Folder (directory):
+Open Windows Powershell (not needed to run as Admin now)
+Type:
+C:\ > cd ~/
+C:\ > mkdir Dev
+6. Install Virtualenv:
+Going forward, whenever you see > or $ before code, that means you should be working in the Windows Powershell (or Command Prompt if you don't have Windows Powershell)
+
+To install a virtual environment:
+ > pip install virtualenv
+Verify:
+> pip freeze
+virtualenv==15.1.0
+7. Create a Virtualenv:
+Navigate to Dev:
+ > cd ~/Dev
+Make virtualenv parent directory:
+ > mkdir cfehome
+ > cd cfehome
+Create virtualenv
+
+ > virtualenv .
+Note, if you have two versions of python installed you may have to do this:
+
+ > virtualenv -p python3 .
+Virtualenv shortcut to above steps:
+
+ > cd ~/Dev
+ > virtualenv yourenvname
+ > cd yourenvname
+Activate your environment:
+
+ > cd \path\to\your\virtualen\env\ 
+ > cd ~\Dev\cfehome
+ > .\Scripts\activate
+Nice work! Just verify:
+ (cfehome) > pip freeze
+the (cfehome) is the name of the virtualenv parent directory from above. When you see this, that means the virtualenv has been activated.
+pip freeze should return nothing at this point
+8. Reactivate and Deactivate Virtualenv
+> cd ~\Dev\cfehome # or your virtualenv's path
+> .\Scripts\activate
+(cfehome) > deactivate
+> .\Scripts\activate
+(cfehome) >
+9. Now install any Python Package:
+> cd ~\Dev\cfehome
+> .\Scripts\activate
+(cfehome) > pip install django==1.11.5
+*NOTE: django==1.11.5 is for version 1.11.5. If you need a different version, replace those numbers accordingly. Such as django==1.8.7 or django==1.10.7 or django==1.11.2. This is true for any python package.
