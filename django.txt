@@ -1,0 +1,262 @@
+/* Django Simple Project creation and make it ready to use with MySQL */
+
+Note : The commands are executed from Windows Powershell. Same can be done from Linux/Mac Terminal
+
+/* =======================================================================================================================================================
+ Create Virtual Environment
+======================================================================================================================================================= */
+1. > pip install virtualenvwrapper-win
+For non windows system : use virtualenvwrapper
+
+2. Create a folder where the environment to set. Here we consider a folder ~/Documents/venv
+
+3. > cd ~/Documents/venv
+
+4. > virtualenv .
+
+5. > .\Scripts\activate
+
+6. (venv)> deactivate /* To deactivate the virtual environment */
+
+/* =======================================================================================================================================================
+ Setup Database - Ignore if embedded sqlite3 to be used
+======================================================================================================================================================= */
+1. Download and Install XAMPP
+
+2. Run admin console and start service for mysql and http.
+
+3. Goto : localhost/phpmyadmin and create a new database for the application from 
+	Databases > Create Database - Enter DB name and Collation as utf8_bin > Create i.e. we use here MusicLibrary
+
+4. In the DB goto Privilages > Add User Account >
+	Choose User details (Choose Host Name : localhost for local hosting) i.e. db_view/welcome > Go
+
+/* =======================================================================================================================================================
+ Create Package depedencies
+======================================================================================================================================================= */
+1. (venv)> pip install django
+
+2. (venv)> pip install wheel
+
+3. Download mysqlclient-1.3.13-cp37-cp37m-win_amd64.whl setup file for mysql and place it into venv folder
+
+4. (venv)> pip install .\mysqlclient-1.3.13-cp37-cp37m-win_amd64.whl
+
+5. Freeze the package dependencies : (venv)> pip freeze > requirements.txt
+
+6. When we migrate the project to other system then we can simply create the virtual environment and run a single command 
+	(venv)> pip install -r requirements.txt
+
+/* =======================================================================================================================================================
+ Create Django Project
+======================================================================================================================================================= */
+1. Create project : (venv)> django-admin startproject MusicLibrary
+
+From now all the changes will be inside the MusicLibrary root folder
+
+2. Setup database : Edit the settings.py under <root>/<projectName folder>/settings.py
+		DATABASES = {
+			'default': {
+				'ENGINE': 'django.db.backends.mysql',
+				'NAME': 'MusicLibrary',
+				'USER': 'db_view',
+				'PASSWORD': 'welcome',
+				'HOST' : 'localhost',
+				'PORT': '',
+			}
+		}
+
+3. Setup static and template locations. Edit the settins.py file and add the lines in the end :
+	STATIC_URL = '/static/' # This line may be present already as a part of default settings
+	STATIC_PATH = os.path.join(BASE_DIR, 'static') # BASE_DIR has to be defined at the beginning of the file as BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+	TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
+	TEMPLATE_DIRS = (TEMPLATE_PATH,)
+	
+	This will enable :
+		a. all the static files for an application (images, css, js etc.) to be placed inside : <root>/<application>/static/<folder with same name of app>/
+		b. all the templates for an application to be placed inside : <root>/application>/templates/<folder with same name of app>/ 
+	
+4. Migrate the project changes :
+	(venv)> python manage.py makemigrations
+	(venv)> python manage.py migrate
+
+5. Create superuser for administration : (venv)> python manage.py createsuperuser
+	Fill in details i.e. here we create as admin/welcome
+	
+6. Run the application : (venv)> python manage.py runserver
+
+7. Verify Application : http://127.0.0.1:8000/admin/ and login with superuser login details that is just created
+
+/* =======================================================================================================================================================
+ Create Application
+======================================================================================================================================================= */
+1. Create one applicaton for all landing contents like website homepage, about us page, contact page etc. We will name it as "main_". 
+   _ is used to eliminate conflict with python reserved keywords.
+   
+	(venv)> python manage.py startapp main_
+	
+2. Create below folders for static and template files :
+	a. <root>/main_/static/main_/ ==> place static contents here
+	b. <root>/main_/templates/main_/ ==> place templates here
+
+3. Register the application into project : Edit the <root>/<projectName folder>/settings.py and add the name of newly created app in INSTALLED_APPS =[]
+	INSTALLED_APPS = [
+		... (existing apps)
+		'main_',
+	]
+
+4. Create HTML files for index.html, contact.html etc and place them in main_/templates/main_ folder.
+
+5. Create views for these templates to be display on hitting URLs. Edit main_/views.py :
+
+	from django.shortcuts import render
+	def index(request):
+		return render(request, 'main_/index.html')
+	def contact(request):
+		return render(request, 'main_/contact.html')
+
+6. Add URLs to re-direct to these functions :
+	a. Create main_/urls.py file.
+	b. Edit <root>/<project name folder>/urls.py :
+	
+		from django.contrib import admin
+		from django.urls import path, include
+		urlpatterns = [
+			path('admin/', admin.site.urls),
+			path('', include('main_.urls')),
+			path('index/', include('main_.urls')),
+			path('home/', include('main_.urls')),
+			path('main_/', include('main_.urls')),
+		]
+	c. Edit main_/urls.py :
+	
+		from django.conf.urls import url
+		from . import views
+		urlpatterns = [
+			# /, /index, /home, /main_ i.e. whatever in <project folder>/urls.py + nothing added "^$" (empty regualr exp)
+			url(r'^$', views.index, name='main_index'),
+			# /contact, /index/contact, /home/contact, /main_/contact
+			url(r'^contact/$', views.contact, name='main_contact'),
+		]
+
+7. Migrate and test project.
+
+/* =======================================================================================================================================================
+ Create User Account Management application and model
+======================================================================================================================================================= */
+1. Create app named "account_" : (venv)> python manage.py startapp account_
+
+2. Create template, static folders and add the project in <project folder>/settings.py -> INSTALLED_APP []
+
+3. Create model for user accounts. Edit the account_/models.py :
+
+	from django.db import models
+	class Account(models.Model):
+		userName = models.CharField(max_length=20)
+		password = models.CharField(max_length=200) # intentionally large field to store hashed value of passwords
+		firstName = models.CharField(max_length=50)
+		lastName = models.CharField(max_length=50)
+		email = models.CharField(max_length=50)
+		def __str__():
+				return "{} : {}, {}".format(userName, lastName, firstName)
+4. Register the model in administration panel. Edit account_/admin.py :
+
+	from django.contrib import admin
+	from .models import Account
+	admin.site.register(Account)
+
+5. Migrate changes and test the model by login to localhost/admin with superuser
+
+6. Create registration.html and login.html and place them in account_/templates/account_/
+	a. HTML form of registration.html :
+		<form method="POST" action="/account/doRegister/">
+			{% csrf_token %}
+			Username <input type="text" name="username"><br>
+			Password <input type="password" name="password"><br>
+			First Name <input type="text" name="firstName"><br>
+			Last Name <input type="text" name="lastName"><br>
+			Email <input type="text" name="email"><br>
+			<button type="submit">Register</button>
+		</form>
+		
+	b. HTML form of login.html :
+		<form method="POST" action="/account/doLogin/">
+			{% csrf_token %}
+			Username <input type="text" name="username"><br>
+			Password <input type="password" name="password"><br>
+			<button type="submit">Login</button>
+		</form>
+
+7. Create Views for Login and Registration. Edit account_/views.py :
+		from django.shortcuts import render, redirect
+		from .models import Account
+		from django.contrib.auth.hashers import make_password, check_password
+		from django.http import HttpResponse
+		import sys
+
+		def register(request):
+			return render(request, 'account_/registration.html')
+
+		def doRegister(request):
+			username = request.POST["username"]
+			password = make_password(request.POST["passwd"],salt=None, hasher='default')
+			firstName = request.POST["firstName"]
+			lastName = request.POST["lastName"]
+			email = request.POST["email"]
+			
+			record = Account()
+			record.userName = username
+			record.password = password
+			record.firstName = firstName
+			record.lastName = lastName
+			record.email = email
+			record.save()
+			return redirect('/account/login')
+			
+			
+		def login(request):
+			return render(request, 'account_/login.html')
+
+		def doLogin(request):
+			username = request.POST["username"]
+			password = request.POST["passwd"]
+			
+			try:
+				record = Account.objects.get(userName = username)
+				if record is not None:
+					validated = check_password(password, record.password, setter=None, preferred='default')
+					if validated:
+						return redirect('/account/homepage')
+					else:
+						return HttpResponse("<h2>Invalid Password</h2>")
+			except Account.DoesNotExist:
+				return HttpResponse("User not found")			
+			except Exception as e:
+				extype, value, traceback = sys.exc_info()
+				return HttpResponse("Exception : "+str(value))
+					
+		def homepage(request):
+			return render(request, 'account_/homepage.html')
+			
+			
+8. Create url file for account_ app : account_/urls.py
+
+9. Add entry in <project folder>/urls.py : 
+	
+	path('account_/', include('account_.urls')),
+
+10. Create URL mapping for registration and login in account_/urls.py :
+
+	from django.conf.urls import url
+	from . import views
+	urlpatterns = [
+		url(r'^login/$', views.login, name='account_login'),
+		url(r'^doLogin/$', views.doLogin, name='account_doLogin'),
+		url(r'^register/$', views.register, name='account_register'),
+		url(r'^doRegister/$', views.doRegister, name='account_doRegister'),
+		url(r'^homepage/$', views.homepage, name='account_homepage'),
+	]
+
+/* =======================================================================================================================================================
+ Styling templates - Static Files
+======================================================================================================================================================= */
