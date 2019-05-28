@@ -157,8 +157,8 @@ From now all the changes will be inside the MusicLibrary root folder
 		firstName = models.CharField(max_length=50)
 		lastName = models.CharField(max_length=50)
 		email = models.CharField(max_length=50)
-		def __str__():
-				return "{} : {}, {}".format(userName, lastName, firstName)
+		def __str__(self):
+        		return self.userName + ' : ' + self.lastName + ', ' + self.firstName
 4. Register the model in administration panel. Edit account_/admin.py :
 
 	from django.contrib import admin
@@ -198,20 +198,20 @@ From now all the changes will be inside the MusicLibrary root folder
 			return render(request, 'account_/registration.html')
 
 		def doRegister(request):
-			username = request.POST["username"]
-			password = make_password(request.POST["passwd"],salt=None, hasher='default')
-			firstName = request.POST["firstName"]
-			lastName = request.POST["lastName"]
-			email = request.POST["email"]
-			
-			record = Account()
-			record.userName = username
-			record.password = password
-			record.firstName = firstName
-			record.lastName = lastName
-			record.email = email
-			record.save()
-			return redirect('/account/login')
+		    username = request.POST["username"]
+		    password = make_password(request.POST.get('passwd',False),salt=None, hasher='default')
+		    firstName = request.POST["firstName"]
+		    lastName = request.POST["lastName"]
+		    email = request.POST["email"]
+
+		    record = Account()
+		    record.userName = username
+		    record.password = password
+		    record.firstName = firstName
+		    record.lastName = lastName
+		    record.email = email
+		    record.save()
+		    return redirect('/account_/login')
 			
 			
 		def login(request):
@@ -219,14 +219,14 @@ From now all the changes will be inside the MusicLibrary root folder
 
 		def doLogin(request):
 			username = request.POST["username"]
-			password = request.POST["passwd"]
+			password = request.POST.get('passwd',False)
 			
 			try:
 				record = Account.objects.get(userName = username)
 				if record is not None:
 					validated = check_password(password, record.password, setter=None, preferred='default')
 					if validated:
-						return redirect('/account/homepage')
+						return redirect('/account_/homepage')
 					else:
 						return HttpResponse("<h2>Invalid Password</h2>")
 			except Account.DoesNotExist:
