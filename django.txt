@@ -260,3 +260,11 @@ From now all the changes will be inside the MusicLibrary root folder
 /* =======================================================================================================================================================
  Styling templates - Static Files
 ======================================================================================================================================================= */
+
+1. Create css file <app>/static/<app_name_folder>/css/style.css
+
+2. In the HTML Head tag use the below:
+    <head>
+        {% load staticfiles %}
+        <link rel='stylesheet' href="{% static '<app_name_folder>/css/style.css' %}">
+    </head>
