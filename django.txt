@@ -261,10 +261,66 @@ From now all the changes will be inside the MusicLibrary root folder
  Styling templates - Static Files
 ======================================================================================================================================================= */
 
-1. Create css file <app>/static/<app_name_folder>/css/style.css
+1. Create css file <app>/static/<app_name_folder>/css/style.css   ----> e.g. main_/static/main_/css/style.css
 
 2. In the HTML Head tag use the below:
     <head>
         {% load staticfiles %}
         <link rel='stylesheet' href="{% static '<app_name_folder>/css/style.css' %}">
     </head>
+    
+/* =====================================================================================================================================
+ Wroking with API
+===================================================================================================================================== */ 1. Create an app for API
+	(venv)> python manage.py startapp api_
+
+2. Create <django_project>/api_/urls.py
+
+	from django.conf.urls import url
+	from . import views
+	urlpatterns = [
+	    url(r'^test_api/$', views.test_api, name='api_test_api'),
+	]
+
+3. Add entry for api_/urls.py inside the <django_project>/<project name folder>/urls.py
+
+	path('api_/', include('api_.urls')),
+	
+4. Create view in <django_project>/api_/views.py
+
+	from django.shortcuts import render
+	from django.http import HttpResponse, JsonResponse
+
+	def test_api(request):
+	    param1 = request.GET.get('param1',False)
+	    param2 = request.GET.get('param2',False)
+	    # additional work for API. This is just to test
+	    data = {
+		'param1': param1,
+		'param2': param2
+	    }
+	    return JsonResponse(data)
+	    
+5. From the Javascript file call this API
+
+$(function(){
+    $("#btn").click(function () {
+        test();
+    });
+})
+
+function test() {
+    var param1 = document.getElementById('x').value;
+    var param2 = document.getElementById('y').value;
+    $.ajax({
+        url: '../../api_/test_api/',
+        data: {
+          'param1': param1,
+          'param2' : param2
+        },
+        dataType: 'json',
+        success: function (data) {
+          alert(data);
+        }
+    });
+}
