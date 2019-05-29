@@ -167,7 +167,7 @@ From now all the changes will be inside the MusicLibrary root folder
 
 5. Migrate changes and test the model by login to localhost/admin with superuser
 
-6. Create registration.html and login.html and place them in account_/templates/account_/
+6. Create registration.html, login.html and homepage.html and place them in account_/templates/account_/
 	a. HTML form of registration.html :
 		<form method="POST" action="/account/doRegister/">
 			{% csrf_token %}
@@ -186,6 +186,17 @@ From now all the changes will be inside the MusicLibrary root folder
 			Password <input type="password" name="password"><br>
 			<button type="submit">Login</button>
 		</form>
+		
+        c. HTML for homepage.html
+		{% if username %}
+		    <h1>Welcome ! {{ username }}</h1>
+		{% else %}
+		    <h1>You are not logged in..</h1>
+		{% endif %}
+
+		{% if error_msg %}
+		    <h1>Error -  {{ error_msg }}</h1>
+		{% endif %}
 
 7. Create Views for Login and Registration. Edit account_/views.py :
 		from django.shortcuts import render, redirect
@@ -226,6 +237,7 @@ From now all the changes will be inside the MusicLibrary root folder
 				if record is not None:
 					validated = check_password(password, record.password, setter=None, preferred='default')
 					if validated:
+						request.session['user'] = record.username
 						return redirect('/account_/homepage')
 					else:
 						return HttpResponse("<h2>Invalid Password</h2>")
@@ -236,7 +248,22 @@ From now all the changes will be inside the MusicLibrary root folder
 				return HttpResponse("Exception : "+str(value))
 					
 		def homepage(request):
-			return render(request, 'account_/homepage.html')
+			username = None
+			error_msg = ''
+			try:
+				username = str(request.session['user'])
+				if len(username) == 0:
+				    raise KeyError
+			except KeyError:
+				username = None
+			except Exception as e:
+				username = None
+				error_msg = str(e)
+			context = {
+				'username' : username,
+				'error_msg' : error_msg
+			}
+			return render(request, 'main_/homepage.html', context)
 			
 			
 8. Create url file for account_ app : account_/urls.py
